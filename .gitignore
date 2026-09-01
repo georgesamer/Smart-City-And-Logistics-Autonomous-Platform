@@ -1,0 +1,25 @@
+# Virtual Environment
+.venv/
+venv/
+ENV/
+
+# Python Cache & Compiled Files
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Testing & Coverage Cache
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Jupyter & Editor Settings
+.ipynb_checkpoints/
+.vscode/
+.idea/
+
+# OS Specific Files
+Thumbs.db
+Desktop.ini
+.DS_Store

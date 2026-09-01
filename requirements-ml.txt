@@ -1,0 +1,7 @@
+# Optional deep-perception engine dependencies (NLP + Vision ML)
+# They do not affect the core pipeline; install only when needed:
+#   pip install -r requirements-ml.txt
+torch>=2.0
+torchvision>=0.15
+transformers>=4.30
+Pillow>=10.0

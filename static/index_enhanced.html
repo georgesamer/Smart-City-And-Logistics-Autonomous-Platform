@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Smart City Dispatch</title>
+    <link rel="stylesheet" href="/static/styles.css" />
+  </head>
+  <body>
+    <div class="app-shell">
+      <aside class="sidebar">
+        <div class="brand">
+          <div class="brand-mark">SC</div>
+          <div>
+            <h1>Smart City</h1>
+            <p>Autonomous Platform</p>
+          </div>
+        </div>
+
+        <nav class="nav">
+          <button class="nav-item active" data-tab="overview">Overview</button>
+          <button class="nav-item" data-tab="map">Map & Route</button>
+          <button class="nav-item" data-tab="fleet">Fleet Status</button>
+          <button class="nav-item" data-tab="analytics">Analytics</button>
+        </nav>
+      </aside>
+
+      <main class="main-panel">
+        <header class="topbar">
+          <div>
+            <p class="eyebrow">Operations Center</p>
+            <h2>Dispatch Overview</h2>
+          </div>
+          <button id="runDispatchBtn" class="primary-btn">Run Dispatch</button>
+        </header>
+
+        <section class="stats-grid">
+          <article class="stat-card accent-blue">
+            <span>Active Incidents</span>
+            <strong id="incidentCount">1</strong>
+          </article>
+          <article class="stat-card accent-green">
+            <span>Fleet Ready</span>
+            <strong id="fleetCount">2</strong>
+          </article>
+          <article class="stat-card accent-orange">
+            <span>Risk Level</span>
+            <strong id="riskLevel">--</strong>
+          </article>
+          <article class="stat-card accent-purple">
+            <span>Route Cost</span>
+            <strong id="costValue">--</strong>
+          </article>
+        </section>
+
+        <!-- OVERVIEW TAB -->
+        <div id="overview-tab" class="tab-content active">
+          <section class="content-grid">
+            <div class="panel">
+              <div class="panel-header">
+                <h3>Incident Input</h3>
+              </div>
+              <form id="dispatchForm" class="form-grid">
+                <label>
+                  Incident ID
+                  <input id="incidentId" type="text" value="INC_001" />
+                </label>
+                <label>
+                  Current Hour
+                  <input id="currentHour" type="number" min="0" max="23" value="14" />
+                </label>
+                <label class="full-width">
+                  Incident Report
+                  <textarea id="reportInput" rows="5">Urgent emergency report: a leak incident near (0, 4) requires support with a capacity of 30 units</textarea>
+                </label>
+                <label class="full-width">
+                  Camera Feed
+                  <input id="cameraImage" type="text" value="camera_feed_accident_block.png" />
+                </label>
+                <button type="submit" class="primary-btn submit-btn">Analyze & Dispatch</button>
+              </form>
+            </div>
+
+            <div class="panel">
+              <div class="panel-header">
+                <h3>System Status</h3>
+              </div>
+              <div id="statusPanel" class="status-panel">
+                <div class="status-pill idle">Idle</div>
+                <p>Waiting for the next dispatch scenario.</p>
+              </div>
+              <div id="resultSummary" class="result-summary">
+                <p>No results yet.</p>
+              </div>
+            </div>
+          </section>
+
+          <section class="panel table-panel">
+            <div class="panel-header">
+              <h3>Dispatch Output (JSON)</h3>
+            </div>
+            <pre id="dispatchOutput" class="output-box">{ "status": "awaiting run" }</pre>
+          </section>
+        </div>
+
+        <!-- MAP TAB -->
+        <div id="map-tab" class="tab-content">
+          <section class="panel map-panel">
+            <div class="panel-header">
+              <h3>City Grid & Route Visualization</h3>
+            </div>
+            <div class="map-container">
+              <canvas id="mapCanvas" width="600" height="600"></canvas>
+            </div>
+            <div class="map-legend">
+              <div class="legend-item">
+                <span class="legend-marker vehicle"></span>
+                <span>Vehicle Location</span>
+              </div>
+              <div class="legend-item">
+                <span class="legend-marker incident"></span>
+                <span>Incident Location</span>
+              </div>
+              <div class="legend-item">
+                <span class="legend-marker path"></span>
+                <span>Route Path</span>
+              </div>
+            </div>
+          </section>
+
+          <section class="panel table-panel">
+            <div class="panel-header">
+              <h3>Route Details</h3>
+            </div>
+            <table class="data-table">
+              <tbody id="routeDetails">
+                <tr>
+                  <td colspan="2" style="text-align:center; color: var(--muted);">No route calculated yet</td>
+                </tr>
+              </tbody>
+            </table>
+          </section>
+        </div>
+
+        <!-- FLEET TAB -->
+        <div id="fleet-tab" class="tab-content">
+          <section class="panel table-panel">
+            <div class="panel-header">
+              <h3>Available Vehicles</h3>
+            </div>
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>Vehicle ID</th>
+                  <th>Location</th>
+                  <th>Battery</th>
+                  <th>Capacity</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+              <tbody id="fleetTable">
+                <tr>
+                  <td colspan="5" style="text-align:center; color: var(--muted);">No fleet data yet</td>
+                </tr>
+              </tbody>
+            </table>
+          </section>
+
+          <section class="panel table-panel">
+            <div class="panel-header">
+              <h3>Assigned Vehicle</h3>
+            </div>
+            <table class="data-table">
+              <tbody id="assignedVehicleTable">
+                <tr>
+                  <td colspan="2" style="text-align:center; color: var(--muted);">No assignment yet</td>
+                </tr>
+              </tbody>
+            </table>
+          </section>
+        </div>
+
+        <!-- ANALYTICS TAB -->
+        <div id="analytics-tab" class="tab-content">
+          <section class="analytics-grid">
+            <div class="panel chart-panel">
+              <div class="panel-header">
+                <h3>Risk Assessment</h3>
+              </div>
+              <div class="risk-chart">
+                <div class="risk-bar">
+                  <div class="risk-fill" id="riskFill" style="width: 0%"></div>
+                </div>
+                <p id="riskText" style="text-align:center; color: var(--muted);">--</p>
+              </div>
+            </div>
+
+            <div class="panel chart-panel">
+              <div class="panel-header">
+                <h3>Route Efficiency</h3>
+              </div>
+              <div style="padding: 20px; text-align: center;">
+                <div style="font-size: 2.5rem; font-weight: 700; color: var(--primary);" id="efficiencyValue">--</div>
+                <p style="color: var(--muted);">Cost Units</p>
+              </div>
+            </div>
+
+            <div class="panel chart-panel">
+              <div class="panel-header">
+                <h3>Delay Probability</h3>
+              </div>
+              <div class="probability-gauge">
+                <div id="probabilityGauge" style="font-size: 2rem; font-weight: 700; color: var(--green);">--</div>
+              </div>
+            </div>
+
+            <div class="panel chart-panel">
+              <div class="panel-header">
+                <h3>Weather & Traffic Impact</h3>
+              </div>
+              <div id="weatherImpact" style="padding: 20px;">
+                <p style="color: var(--muted);">No data</p>
+              </div>
+            </div>
+          </section>
+        </div>
+      </main>
+    </div>
+
+    <script src="/static/app_enhanced.js"></script>
+  </body>
+</html>

@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Smart City Dispatch</title>
+    <link rel="stylesheet" href="/static/styles.css" />
+  </head>
+  <body>
+    <div class="app-shell">
+      <aside class="sidebar">
+        <div class="brand">
+          <div class="brand-mark">SC</div>
+          <div>
+            <h1>Smart City</h1>
+            <p>Autonomous Platform</p>
+          </div>
+        </div>
+
+        <nav class="nav">
+          <button class="nav-item active">Overview</button>
+          <button class="nav-item">Fleet</button>
+          <button class="nav-item">Incidents</button>
+          <button class="nav-item">Analytics</button>
+        </nav>
+      </aside>
+
+      <main class="main-panel">
+        <header class="topbar">
+          <div>
+            <p class="eyebrow">Operations Center</p>
+            <h2>Dispatch Overview</h2>
+          </div>
+          <button id="runDispatchBtn" class="primary-btn">Run Dispatch</button>
+        </header>
+
+        <section class="stats-grid">
+          <article class="stat-card accent-blue">
+            <span>Active Incidents</span>
+            <strong id="incidentCount">1</strong>
+          </article>
+          <article class="stat-card accent-green">
+            <span>Fleet Ready</span>
+            <strong id="fleetCount">2</strong>
+          </article>
+          <article class="stat-card accent-orange">
+            <span>Risk Level</span>
+            <strong id="riskLevel">--</strong>
+          </article>
+          <article class="stat-card accent-purple">
+            <span>ETA</span>
+            <strong id="etaValue">--</strong>
+          </article>
+        </section>
+
+        <section class="content-grid">
+          <div class="panel">
+            <div class="panel-header">
+              <h3>Incident Input</h3>
+            </div>
+            <form id="dispatchForm" class="form-grid">
+              <label>
+                Incident ID
+                <input id="incidentId" type="text" value="INC_001" />
+              </label>
+              <label>
+                Current Hour
+                <input id="currentHour" type="number" min="0" max="23" value="14" />
+              </label>
+              <label class="full-width">
+                Incident Report
+                <textarea id="reportInput" rows="5">Urgent emergency report: a leak incident near (0, 4) requires support with a capacity of 30 units</textarea>
+              </label>
+              <label class="full-width">
+                Camera Feed
+                <input id="cameraImage" type="text" value="camera_feed_accident_block.png" />
+              </label>
+              <button type="submit" class="primary-btn submit-btn">Analyze & Dispatch</button>
+            </form>
+          </div>
+
+          <div class="panel">
+            <div class="panel-header">
+              <h3>System Status</h3>
+            </div>
+            <div id="statusPanel" class="status-panel">
+              <div class="status-pill idle">Idle</div>
+              <p>Waiting for the next dispatch scenario.</p>
+            </div>
+            <div id="resultSummary" class="result-summary">
+              <p>No results yet.</p>
+            </div>
+          </div>
+        </section>
+
+        <section class="panel table-panel">
+          <div class="panel-header">
+            <h3>Dispatch Output</h3>
+          </div>
+          <pre id="dispatchOutput" class="output-box">{ "status": "awaiting run" }</pre>
+        </section>
+      </main>
+    </div>
+
+    <script src="/static/app.js"></script>
+  </body>
+</html>
